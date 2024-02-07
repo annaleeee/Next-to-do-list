@@ -6,27 +6,24 @@ import NewProject from '@/components/NewProject.jsx';
 export default function Home() {
   const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined, 
-    projects: [],
-    tasks: []
+    projects: []
   })
 
-  // function handleAddProject(projectData) {
-  //   setProjectsState((prevState) => {
-  //     const projectId = Math.random();
-  //     const newProject = {
-  //       ...projectData,
-  //       id: projectId
-  //     };
+  function handleAddProject(projectData) {
+    setProjectsState((prevState) => {
+      const projectId = Math.random();
+      const newProject = {
+        ...projectData,
+        id: projectId
+      };
 
-  //     return {
-  //       ...prevState,
-  //       selectedProjectId: undefined,
-  //       projects: [...prevState.projects, newProject]
-  //     }
-  //   })
-  // }
-
-  function handleAddProject(){}
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: [...prevState.projects, newProject]
+      }
+    })
+  }
 
   function handleCancelProject() {
     setProjectsState((prevState) => {
