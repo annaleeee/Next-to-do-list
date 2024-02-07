@@ -16,7 +16,7 @@ const Aside: FC<Props> = ({ isDialog, setIsDialog }) => {
             <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
           </li>
           <li className="mt-8">
-            <CreateDialog>
+            <CreateDialog open={isDialog}>
               <Button onClick={() => setIsDialog(!isDialog)}>
                 +새 프로젝트 생성하기
               </Button>

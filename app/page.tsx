@@ -19,7 +19,7 @@ export default function Home() {
             <span className="font-bold text-gray-500">
               프로젝트를 선택하시거나 생성하세요.
             </span>
-            <CreateDialog>
+            <CreateDialog open={isDialog}>
               <Button className="mt-2" onClick={() => setIsDialog(!isDialog)}>
                 + 새 프로젝트 생성하기
               </Button>
