@@ -4,6 +4,7 @@ import { FC, PropsWithChildren } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Form } from "./ui/form";
 import z from "zod";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
   title: z
@@ -18,11 +19,20 @@ const formSchema = z.object({
 });
 
 const CreateDialog: FC<PropsWithChildren> = ({ children }) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    mode: "onChange",
+    defaultValues: {
+      title: "",
+      description: "",
+      date: undefined,
+    },
+  });
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <Form>
+        <Form {...form}>
           <form></form>
         </Form>
       </DialogContent>
