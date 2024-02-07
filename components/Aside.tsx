@@ -4,7 +4,7 @@ export default function Aside() {
   return (
     <aside>
       <nav>
-        <ul className="min-h-screen pl-7 pt-12 bg-sky-800">
+        <ul className="min-h-screen pl-7 pt-12 bg-gray-50">
           <li>
             <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
           </li>
