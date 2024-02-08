@@ -1,40 +1,23 @@
 "use client"; 
-import { useState } from "react";
+import { useState } from 'react';
 
-import NewProject from '@/components/NewProject.jsx';
+import NewProjectDialog from "@/components/NewProjectDialog";
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
-  const [projectsState, setProjectsState] = useState({
-    selectedProjectId: undefined, 
-    projects: []
-  })
+  const [handleDialog, setHandleDialog] = useState(false);
 
-  function handleAddProject(projectData) {
-    setProjectsState((prevState) => {
-      const projectId = Math.random();
-      const newProject = {
-        ...projectData,
-        id: projectId
-      };
-
-      return {
-        ...prevState,
-        selectedProjectId: undefined,
-        projects: [...prevState.projects, newProject]
-      }
-    })
-  }
-
-  function handleCancelProject() {
-    setProjectsState((prevState) => {
-      return {
-        ...prevState,
-        selectedProjectId: undefined, 
-      };
-    });
+  function handleButtonClick() {
+    setHandleDialog(true);
   }
 
   return (
-    <NewProject onAdd={handleAddProject} onCancel={handleCancelProject} />
+    <>
+      <NewProjectDialog open={handleDialog}>
+          <Button onClick={handleButtonClick}>
+            + 새 프로젝트 생성하기
+          </Button>
+      </NewProjectDialog>
+    </>
   );
 }
