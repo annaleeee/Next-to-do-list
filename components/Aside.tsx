@@ -12,6 +12,7 @@ const Aside: FC<Props> = ({ setSelected }) => {
     <aside className="bg-gray-50">
       <nav className="pl-7">
         <ul className="pt-12">
+
           <li>
             <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
           </li>
