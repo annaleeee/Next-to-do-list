@@ -1,6 +1,7 @@
 "use client";
 import Aside from "@/components/Aside";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -16,13 +17,20 @@ export default function Home() {
   return (
     <main className="grid grid-cols-6 min-h-screen">
       <Aside setSelected={setSelected} />
-      <section className="col-start-2 col-span-5 grid place-items-center">
+      <section
+        className={cn(
+          "col-start-2 col-span-5 grid",
+          selected ? "p-10" : "place-items-center",
+        )}
+      >
         <article>
           {selected ? (
             <div>
-              <h1 className="">{selected.title}</h1>
-              <p>{selected.description}</p>
-              <span>{selected.dueDate.getDate()}</span>
+              <h1 className="font-bold text-3xl">{selected.title}</h1>
+              <p className="mt-3">{selected.description}</p>
+              <span className="text-slate-500">
+                date: {selected.dueDate.getDate()}
+              </span>
             </div>
           ) : (
             <div className="flex flex-col justify-center items-center gap-3">
