@@ -14,7 +14,28 @@ export default function Aside() {
           </li>
         </ul>
       </nav>
-      <ProjectList projects={["project 1", "project2", "project3"]} />
+      <ProjectList
+        projects={[
+          {
+            title: "project 1",
+            description: "this is project 1",
+            dueDate: new Date(),
+          },
+          {
+            title: "project 2",
+            description: "this is project 2",
+            dueDate: new Date(),
+          },
+          {
+            title: "project 3",
+            description: "this is project 3",
+            dueDate: new Date(),
+          },
+        ]}
+        setSelected={setSelected}
+      />
     </aside>
   );
-}
+};
+
+export default Aside;

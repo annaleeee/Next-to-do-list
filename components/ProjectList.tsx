@@ -1,21 +1,22 @@
 "use client";
-import { FC, useState } from "react";
+import { Project } from "@/app/page";
+import { FC } from "react";
 
 type Props = {
-  projects: string[];
+  projects: Project[];
+  setSelected: (value: Project) => void;
 };
 
-const ProjectList: FC<Props> = ({ projects }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const ProjectList: FC<Props> = ({ projects, setSelected }) => {
   return (
     <ul className="mt-5">
       {projects.map((project) => (
-        <li key={project} className="hover:bg-slate-300">
+        <li key={project.title} className="hover:bg-slate-300">
           <button
             className="py-4 pl-7 w-full h-full hover:bg-slate-300 text-left"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setSelected(project)}
           >
-            {project}
+            {project.title}
           </button>
         </li>
       ))}
