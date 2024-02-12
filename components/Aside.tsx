@@ -1,7 +1,13 @@
+import { FC } from "react";
 import ProjectList from "./ProjectList";
 import { Button } from "./ui/button";
+import { Project } from "@/app/page";
 
-export default function Aside() {
+type Props = {
+  setSelected: (value: Project) => void;
+};
+
+const Aside: FC<Props> = ({ setSelected }) => {
   return (
     <aside className="bg-gray-50">
       <nav className="pl-7">
