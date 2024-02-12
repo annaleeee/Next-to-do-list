@@ -1,8 +1,18 @@
+"use client";
 import Aside from "@/components/Aside";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useState } from "react";
+
+export type Project = {
+  title: number | string;
+  description: string;
+  dueDate: Date;
+};
 
 export default function Home() {
+  const [selected, setSelected] = useState<Project>();
+
   return (
     <main className="grid grid-cols-6 min-h-screen">
       <Aside />
