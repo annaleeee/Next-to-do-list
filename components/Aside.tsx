@@ -25,16 +25,21 @@ const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
   }
 
   return (
-    <aside className="bg-gray-50">
+    <aside className="bg-gray-800">
       <nav className="pl-7">
         <ul className="pt-12">
 
           <li>
-            <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
+            <h1 className="font-bold xl:text-xl">이안나님의 프로젝트</h1>
           </li>
           <li className="mt-8">
             <NewProjectDialog open={dialogOpen} onCancel={handleCloseDialog}>
-              <Button onClick={handleOpenDialog}>+ 새 프로젝트 생성하기</Button>
+              <Button
+                className="max-xl:w-5/6 max-xl:text-xs"
+                onClick={handleOpenDialog}
+              >
+                + 새 프로젝트 생성하기
+              </Button>
             </NewProjectDialog>
           </li>
         </ul>
