@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type ButtonProps = {
     open: boolean;
@@ -30,7 +30,7 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
     }
 
     return (
-        <Dialog open={dialogOpen}>
+        <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -60,7 +60,9 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={handleCancelButton}>Cancel</Button>
+                    <DialogTrigger asChild>
+                        <Button onClick={handleCancelButton}>Cancel</Button>
+                    </DialogTrigger>   
                     <Button type="submit">Save</Button>
                 </DialogFooter>
             </DialogContent>
