@@ -1,13 +1,14 @@
 import { FC } from "react";
 import ProjectList from "./ProjectList";
 import { Button } from "./ui/button";
-import { Project } from "@/app/page";
+import NewProjectDialog from './NewProjectDialog';
 
-type Props = {
-  setSelected: (value: Project) => void;
+type AsideProps = {
+  open: boolean;
+  onCancel?: () => void;
 };
 
-const Aside: FC<Props> = ({ setSelected }) => {
+const Aside: React.FC<AsideProps> = ({ open }) => {
   return (
     <aside className="bg-gray-50">
       <nav className="pl-7">
@@ -17,7 +18,9 @@ const Aside: FC<Props> = ({ setSelected }) => {
             <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
           </li>
           <li className="mt-8">
-            <Button>+새 프로젝트 생성하기</Button>
+            <NewProjectDialog open={open}>
+              <Button>+새 프로젝트 생성하기</Button>
+            </NewProjectDialog>
           </li>
         </ul>
       </nav>
@@ -43,6 +46,6 @@ const Aside: FC<Props> = ({ setSelected }) => {
       />
     </aside>
   );
-};
+}
 
 export default Aside;
