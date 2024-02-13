@@ -1,24 +1,27 @@
+"use client";
+import { useState, useEffect } from "react";
+
 type ButtonProps = {
     open: boolean;
     onClick?: () => void; // 선택적 프로퍼티
     onCancel?: () => void;
     children?: React.ReactNode;
 } 
+
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+import { 
+    Dialog, DialogContent,DialogDescription,DialogFooter,
+    DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from '@/components/ui/textarea';
 
 const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ onCancel, children, open }) => {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    useEffect(() => {
+        setDialogOpen(open);
+    }, [open]);
 
     const handleCancelButton = () => {
         if (onCancel) {
@@ -27,7 +30,7 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
     }
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
