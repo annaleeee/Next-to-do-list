@@ -1,14 +1,29 @@
-import { FC } from "react";
+'use Client';
+import { useState, FC } from "react";
 import ProjectList from "./ProjectList";
 import { Button } from "./ui/button";
 import NewProjectDialog from './NewProjectDialog';
+import { Project } from "@/app/page";
 
 type AsideProps = {
   open: boolean;
   onCancel?: () => void;
+  setSelected: (value: Project) => void;
 };
 
-const Aside: React.FC<AsideProps> = ({ open }) => {
+const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {  
+    setDialogOpen(true);
+  };
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    if (onCancel) {
+      onCancel();
+    }
+  }
+
   return (
     <aside className="bg-gray-50">
       <nav className="pl-7">
@@ -18,8 +33,8 @@ const Aside: React.FC<AsideProps> = ({ open }) => {
             <h1 className="font-bold text-xl">이안나님의 프로젝트</h1>
           </li>
           <li className="mt-8">
-            <NewProjectDialog open={open}>
-              <Button>+새 프로젝트 생성하기</Button>
+            <NewProjectDialog open={dialogOpen} onCancel={handleCloseDialog}>
+              <Button onClick={handleOpenDialog}>+ 새 프로젝트 생성하기</Button>
             </NewProjectDialog>
           </li>
         </ul>
