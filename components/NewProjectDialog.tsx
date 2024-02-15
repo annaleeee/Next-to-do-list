@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +40,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Project } from "@/app/page";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -62,11 +62,16 @@ const NewProjectDialog: React.FC<
 > = ({ onCancel, children, open, setList }) => {
   const [date, setDate] = React.useState<Date | undefined>(undefined);
 
+  React.useEffect(() => {
+    if (open) setDate(undefined);
+  }, [open]);
+
   const handleCancelButton = () => {
     if (onCancel) onCancel();
     form.reset();
   };
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: "onChange",
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
@@ -78,10 +83,11 @@ const NewProjectDialog: React.FC<
   function onSubmit(value: z.infer<typeof formSchema>) {
     setList((prev) => [...prev, value]);
     onCancel && onCancel();
+    form.reset();
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
@@ -126,7 +132,10 @@ const NewProjectDialog: React.FC<
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <Popover>
+                      <Popover
+                        open={date && !date}
+                        onOpenChange={() => setDate(undefined)}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -150,7 +159,9 @@ const NewProjectDialog: React.FC<
                             onSelect={setDate}
                             initialFocus
                             onDayClick={(date) => {
-                              form.setValue("dueDate", date);
+                              form.setValue("dueDate", date, {
+                                shouldValidate: true,
+                              });
                             }}
                           />
                         </PopoverContent>
@@ -165,7 +176,11 @@ const NewProjectDialog: React.FC<
               <DialogTrigger asChild>
                 <Button onClick={handleCancelButton}>Cancel</Button>
               </DialogTrigger>
-              <Button type="submit">Save</Button>
+              <DialogTrigger asChild>
+                <Button type="submit" disabled={!form.formState.isValid}>
+                  Save
+                </Button>
+              </DialogTrigger>
             </DialogFooter>
           </form>
         </Form>
