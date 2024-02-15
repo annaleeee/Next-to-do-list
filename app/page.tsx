@@ -15,6 +15,7 @@ export type Project = {
 
 export default function Home() {
   const [selected, setSelected] = useState<Project>();
+  const [list, setList] = useState<Project[]>([]);
 
   const [handleDialog, setHandleDialog] = useState(false);
 
@@ -28,14 +29,21 @@ export default function Home() {
 
   return (
     <main className="grid grid-cols-6 min-h-screen">
-      <Aside setSelected={setSelected} open={handleDialog} onCancel={handleCloseDialog} />
-      <section 
-          className={cn(
+      <Aside
+        setSelected={setSelected}
+        open={handleDialog}
+        onCancel={handleCloseDialog}
+        list={list}
+        setList={setList}
+        setHandleDialog={setHandleDialog}
+      />
+      <section
+        className={cn(
           "col-start-2 col-span-5 grid",
           selected ? "p-10" : "place-items-center",
-          )}
+        )}
       >
-      <article>
+        <article>
           {selected ? (
             <div>
               <h1 className="font-bold text-3xl">{selected.title}</h1>
@@ -51,7 +59,11 @@ export default function Home() {
               <span className="font-bold text-gray-500">
                 프로젝트를 선택하시거나 생성하세요.
               </span>
-              <NewProjectDialog open={handleDialog} onCancel={handleCloseDialog}>
+              <NewProjectDialog
+                open={handleDialog}
+                onCancel={handleCloseDialog}
+                setList={setList}
+              >
                 <Button onClick={handleButtonClick} className="mt-2">
                   + 새 프로젝트 생성하기
                 </Button>

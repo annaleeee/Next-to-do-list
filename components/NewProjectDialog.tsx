@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -41,6 +40,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Project } from "@/app/page";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -54,22 +54,16 @@ const formSchema = z.object({
   }),
 });
 
-const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
-  onCancel,
-  children,
-  open,
-}) => {
+const NewProjectDialog: React.FC<
+  ButtonProps & {
+    onCancel?: () => void;
+    setList: React.Dispatch<React.SetStateAction<Project[]>>;
+  }
+> = ({ onCancel, children, open, setList }) => {
   const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  useEffect(() => {
-    setDialogOpen(open);
-  }, [open]);
 
   const handleCancelButton = () => {
-    if (onCancel) {
-      onCancel();
-    }
+    if (onCancel) onCancel();
     form.reset();
   };
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,12 +75,13 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values); // values 값 확인하기
+  function onSubmit(value: z.infer<typeof formSchema>) {
+    setList((prev) => [...prev, value]);
+    onCancel && onCancel();
   }
 
   return (
-    <Dialog>
+    <Dialog open={open}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
