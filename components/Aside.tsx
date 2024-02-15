@@ -27,15 +27,6 @@ const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
       onCancel();
     }
   };
-  // {isEditMode ? (
-  //   <Input
-  //     value={title}
-  //     onChange={(e) => setTitle(e.target.value)}
-  //     className="w-2/3 ml-0"
-  //   />
-  // ) : (
-  //   <h1 className="font-bold xl:text-lg">{title}</h1>
-  // )}
   const editTitle = () => setIsEditMode(!isEditMode);
 
   return (
