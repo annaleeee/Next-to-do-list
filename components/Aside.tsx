@@ -30,15 +30,16 @@ const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
   const editTitle = () => setIsEditMode(!isEditMode);
 
   return (
-    <aside className="bg-gray-800">
+    <aside>
       <nav className="pl-7">
         <ul className="pt-12">
-          <li className="flex gap-5 items-center h-10">
+          <li className="flex items-center h-10">
             <Input
+              maxLength={11}
               disabled={!isEditMode}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-2/3 ml-0 text-lg bg-transparent disabled:opacity-100 disabled:border-transparent disabled:cursor-default border-b-1 border-b-white focus-visible:ring-transparent focus:outline-none rounded-none focus-visible:ring-offset-0"
+              className="border-t-0 border-x-0 border-b-1 border-b-black dark:border-b-white w-2/3 ml-0 text-lg bg-transparent disabled:opacity-100 disabled:border-transparent disabled:cursor-default focus-visible:ring-transparent focus:outline-none rounded-none focus-visible:ring-offset-0"
             />
             <Pen
               size={20}
