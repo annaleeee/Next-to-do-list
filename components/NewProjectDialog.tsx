@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler, Controller } from "react-hook-form"
 import { z } from "zod"
+import { cn } from "@/lib/utils"
 
 type ButtonProps = {
     open: boolean;
@@ -11,7 +12,7 @@ type ButtonProps = {
     onCancel?: () => void;
     children?: React.ReactNode;
 } 
-import { cn } from "@/lib/utils"
+
 import { Button } from "@/components/ui/button"
 import { 
     Dialog, DialogContent,DialogDescription,DialogFooter,
@@ -28,17 +29,29 @@ import { Calendar as CalendarIcon } from "lucide-react"
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
+const forwardForm = React.forwardRef<HTMLFormElement, React.FormHTMLAttributes<HTMLFormElement>>(
+    (props, ref) => {
+      return <form {...props} ref={ref} />;
+    }
+);
+
 const formSchema = z.object({
-    username: z.string().min(2, {
+    title: z.string().min(2, {
       message: "유효한 값을 입력하세요.",
     }),
-  })
+    description: z.string().min(2, { 
+      message: "유효한 값을 입력하세요.",
+    }),
+    dueDate: z.date().refine((value) => !isNaN(value.getTime()), {
+        message: "날짜를 선택해주세요.",
+    }),
+})
 
 const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ onCancel, children, open }) => {
-    const [date, setDate] = useState(null);
+    const [date, setDate] = React.useState<Date | undefined>(undefined);
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => { 
         setDialogOpen(open);
     }, [open]);
 
@@ -46,25 +59,32 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
         if (onCancel) {
             onCancel();
         }
-        setDate(null);
+        reset();
     }
-
+    const { control, handleSubmit, reset } = useForm<z.infer<typeof formSchema>>();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-          username: "",
-        },
-      })
+          title: "", 
+          description: "",
+          dueDate: undefined
+        }
+    })
 
-      function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
-      }
+    const input = React.useRef<HTMLElement>(null);
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values); // values 값 확인하기
+    }
+
+    // const onSubmit: SubmitHandler<FormData> = (data) => {
+    //     console.log(data);
+    // };
 
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-                <Form {...form}>
+                <Form {...form}> {/* ref={input} */}
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <DialogHeader>
                             <DialogTitle>New Project</DialogTitle>
@@ -73,36 +93,30 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid">
-                            <FormField 
-                                className="grid grid-cols-4 items-center"
+                            <Controller 
                                 control={form.control}
                                 name="title"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Project Title</FormLabel>
-                                        <FormControl>
-                                            <Input {...field} />
-                                        </FormControl>
+                                        <FormControl><Input {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <FormField 
-                                className="grid grid-cols-4 items-center"
+                            <Controller 
                                 control={form.control}
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Descrition</FormLabel>
-                                        <FormControl>
-                                            <Textarea {...field} />
-                                        </FormControl>
+                                        <FormControl><Textarea {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
-                            <FormField 
-                                className="grid grid-cols-4 items-center"
+                            <Controller 
+                                // className="grid grid-cols-4 items-center"
                                 control={form.control}
                                 name="dueDate"
                                 render={({ field }) => (
@@ -112,11 +126,11 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({ o
                                             <Popover>
                                                 <PopoverTrigger asChild>
                                                     <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[280px] justify-start text-left font-normal",
-                                                        !date && "text-muted-foreground"
-                                                    )}
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-[280px] justify-start text-left font-normal",
+                                                            !date && "text-muted-foreground"
+                                                        )}
                                                     >
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                                     {date ? format(date, "PPP") : <span>Pick a date</span>}
