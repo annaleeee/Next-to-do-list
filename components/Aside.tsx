@@ -1,5 +1,5 @@
 "use Client";
-import { useState, FC } from "react";
+import { useState, FC, Dispatch, SetStateAction } from "react";
 import ProjectList from "./ProjectList";
 import { Button } from "./ui/button";
 import NewProjectDialog from "./NewProjectDialog";
@@ -11,9 +11,18 @@ type AsideProps = {
   open: boolean;
   onCancel?: () => void;
   setSelected: (value: Project) => void;
+  list: Project[];
+  setList: Dispatch<SetStateAction<Project[]>>;
+  setHandleDialog: (value: boolean) => void;
 };
 
-const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
+const Aside: FC<AsideProps> = ({
+  onCancel,
+  setSelected,
+  list,
+  setList,
+  setHandleDialog,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [title, setTitle] = useState("이안나님의 프로젝트");
@@ -48,7 +57,12 @@ const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
             />
           </li>
           <li className="mt-8">
-            <NewProjectDialog open={dialogOpen} onCancel={handleCloseDialog}>
+            <NewProjectDialog
+              open={dialogOpen}
+              onCancel={handleCloseDialog}
+              setList={setList}
+              setHandleDialog={setHandleDialog}
+            >
               <Button
                 className="max-xl:w-5/6 max-xl:text-xs"
                 onClick={handleOpenDialog}
@@ -59,26 +73,7 @@ const Aside: FC<AsideProps> = ({ onCancel, setSelected }) => {
           </li>
         </ul>
       </nav>
-      <ProjectList
-        projects={[
-          {
-            title: "project 1",
-            description: "this is project 1",
-            dueDate: new Date(),
-          },
-          {
-            title: "project 2",
-            description: "this is project 2",
-            dueDate: new Date(),
-          },
-          {
-            title: "project 3",
-            description: "this is project 3",
-            dueDate: new Date(),
-          },
-        ]}
-        setSelected={setSelected}
-      />
+      <ProjectList projects={list} setSelected={setSelected} />
     </aside>
   );
 };

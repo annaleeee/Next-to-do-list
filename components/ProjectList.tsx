@@ -10,8 +10,8 @@ type Props = {
 const ProjectList: FC<Props> = ({ projects, setSelected }) => {
   return (
     <ul className="mt-5">
-      {projects.map((project) => (
-        <li key={project.title} className="hover:bg-slate-300">
+      {projects?.map((project, index) => (
+        <li key={index} className="hover:bg-slate-300">
           <button
             className="py-4 pl-7 w-full h-full hover:bg-slate-300 text-left"
             onClick={() => setSelected(project)}

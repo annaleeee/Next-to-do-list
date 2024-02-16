@@ -1,8 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +39,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Project } from "@/app/page";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -54,25 +54,24 @@ const formSchema = z.object({
   }),
 });
 
-const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
-  onCancel,
-  children,
-  open,
-}) => {
+const NewProjectDialog: React.FC<
+  ButtonProps & {
+    onCancel?: () => void;
+    setList: React.Dispatch<React.SetStateAction<Project[]>>;
+  }
+> = ({ onCancel, children, open, setList }) => {
   const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    setDialogOpen(open);
+  React.useEffect(() => {
+    if (open) setDate(undefined);
   }, [open]);
 
   const handleCancelButton = () => {
-    if (onCancel) {
-      onCancel();
-    }
+    if (onCancel) onCancel();
     form.reset();
   };
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: "onChange",
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
@@ -81,8 +80,10 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values); // values 값 확인하기
+  function onSubmit(value: z.infer<typeof formSchema>) {
+    setList((prev) => [...prev, value]);
+    onCancel && onCancel();
+    form.reset();
   }
 
   return (
@@ -131,7 +132,10 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <Popover>
+                      <Popover
+                        open={date && !date}
+                        onOpenChange={() => setDate(undefined)}
+                      >
                         <PopoverTrigger asChild>
                           <Button
                             variant={"outline"}
@@ -155,7 +159,9 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
                             onSelect={setDate}
                             initialFocus
                             onDayClick={(date) => {
-                              form.setValue("dueDate", date);
+                              form.setValue("dueDate", date, {
+                                shouldValidate: true,
+                              });
                             }}
                           />
                         </PopoverContent>
@@ -170,7 +176,11 @@ const NewProjectDialog: React.FC<ButtonProps & { onCancel?: () => void }> = ({
               <DialogTrigger asChild>
                 <Button onClick={handleCancelButton}>Cancel</Button>
               </DialogTrigger>
-              <Button type="submit">Save</Button>
+              <DialogTrigger asChild>
+                <Button type="submit" disabled={!form.formState.isValid}>
+                  Save
+                </Button>
+              </DialogTrigger>
             </DialogFooter>
           </form>
         </Form>
